@@ -9,7 +9,7 @@ const Container = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #4CAF50;
+  background-color: ${({ theme }) => theme.secondary};
   border: none;
   color: white;
   padding: 16px 32px;
@@ -23,16 +23,17 @@ const Button = styled.button`
   border-radius: 8px;
   
   &:hover {
-    background-color: #45a049;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 16px 0 ${({ theme }) => theme.shadow};
   }
 `;
 
 const HumanButton = styled(Button)`
-  background-color: #2196F3;
+  background-color: ${({ theme }) => theme.primary};
   
   &:hover {
-    background-color: #0b7dda;
+    background-color: ${({ theme }) => theme.primary};
+    filter: brightness(1.2);
   }
 `;
 
@@ -40,7 +41,8 @@ const EasyButton = styled(Button)`
   background-color: #4CAF50;
   
   &:hover {
-    background-color: #45a049;
+    background-color: #4CAF50;
+    filter: brightness(1.1);
   }
 `;
 
@@ -48,7 +50,8 @@ const MediumButton = styled(Button)`
   background-color: #ff9800;
   
   &:hover {
-    background-color: #e68a00;
+    background-color: #ff9800;
+    filter: brightness(1.1);
   }
 `;
 
@@ -56,7 +59,8 @@ const HardButton = styled(Button)`
   background-color: #f44336;
   
   &:hover {
-    background-color: #da190b;
+    background-color: #f44336;
+    filter: brightness(1.1);
   }
 `;
 
@@ -64,10 +68,16 @@ interface DifficultySelectorProps {
   onSelect: (mode: 'human' | 'ai-easy' | 'ai-medium' | 'ai-hard') => void;
 }
 
+const Header = styled.h2`
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 10px;
+  text-align: center;
+`;
+
 const DifficultySelector: React.FC<DifficultySelectorProps> = ({ onSelect }) => {
   return (
     <Container>
-      <h2>Choose Game Mode</h2>
+      <Header>Choose Game Mode</Header>
       <HumanButton onClick={() => onSelect('human')}>
         Two Players
       </HumanButton>

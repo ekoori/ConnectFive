@@ -8,11 +8,12 @@ const BoardContainer = styled.div`
   width: 95vw;
   height: 85vh;
   margin-top: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.canvasBorder};
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px ${({ theme }) => theme.shadow};
   border-radius: 8px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.boardBackground};
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 `;
 
 const Canvas = styled.canvas`
@@ -29,8 +30,9 @@ const StatusBar = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: ${({ theme }) => theme.statusBarBackground};
+  border-bottom: 1px solid ${({ theme }) => theme.canvasBorder};
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 `;
 
 const PlayerIndicator = styled.div<{ isCurrentPlayer: boolean }>`
@@ -38,7 +40,8 @@ const PlayerIndicator = styled.div<{ isCurrentPlayer: boolean }>`
   align-items: center;
   gap: 10px;
   font-weight: ${({ isCurrentPlayer }) => (isCurrentPlayer ? 'bold' : 'normal')};
-  color: ${({ isCurrentPlayer }) => (isCurrentPlayer ? '#2196F3' : '#666')};
+  color: ${({ isCurrentPlayer, theme }) => (isCurrentPlayer ? theme.primary : theme.text)};
+  transition: color 0.3s ease;
 `;
 
 const PlayerCircle = styled.div<{ color: string }>`
@@ -46,10 +49,11 @@ const PlayerCircle = styled.div<{ color: string }>`
   height: 20px;
   border-radius: 50%;
   background-color: ${({ color }) => color};
+  border: 1px solid ${({ theme }) => theme.canvasBorder};
 `;
 
 const Button = styled.button`
-  background-color: #4CAF50;
+  background-color: ${({ theme }) => theme.secondary};
   border: none;
   color: white;
   padding: 8px 16px;
@@ -60,9 +64,15 @@ const Button = styled.button`
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   
   &:hover {
-    background-color: #45a049;
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -70,7 +80,8 @@ const BackButton = styled(Button)`
   background-color: #f44336;
   
   &:hover {
-    background-color: #da190b;
+    background-color: #f44336;
+    filter: brightness(1.1);
   }
 `;
 
@@ -78,7 +89,8 @@ const ResetButton = styled(Button)`
   background-color: #ff9800;
   
   &:hover {
-    background-color: #e68a00;
+    background-color: #ff9800;
+    filter: brightness(1.1);
   }
 `;
 
@@ -88,21 +100,23 @@ const GameOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${({ theme }) => theme.overlay};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 10;
+  transition: background-color 0.3s ease;
 `;
 
 const WinnerMessage = styled.div`
-  color: white;
+  color: ${({ theme }) => theme.overlayText};
   font-size: 2rem;
   margin-bottom: 20px;
   background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
   border-radius: 10px;
+  transition: color 0.3s ease;
 `;
 
 const CELL_SIZE = 40;
@@ -286,9 +300,14 @@ const GameBoard: React.FC<GameBoardProps> = ({ gameMode, onBackToMenu }) => {
     const rightCell = Math.ceil((canvas.width / scale - offset.x) / CELL_SIZE) + 1;
     const bottomCell = Math.ceil((canvas.height / scale - offset.y) / CELL_SIZE) + 1;
     
+    // Get theme colors
+    const isLightTheme = document.body.style.backgroundColor !== 'rgb(18, 18, 18)';
+    const gridLineColor = isLightTheme ? '#ccc' : '#444';
+    const centerPointColor = isLightTheme ? '#333' : '#aaa';
+    
     // Draw the grid
     ctx.beginPath();
-    ctx.strokeStyle = '#ccc';
+    ctx.strokeStyle = gridLineColor;
     ctx.lineWidth = 0.5;
     
     // Vertical lines
@@ -307,7 +326,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ gameMode, onBackToMenu }) => {
     
     // Draw center point
     ctx.beginPath();
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = centerPointColor;
     ctx.arc(0, 0, 4, 0, Math.PI * 2);
     ctx.fill();
     

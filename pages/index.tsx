@@ -4,6 +4,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import GameBoard from '../src/components/GameBoard';
 import DifficultySelector from '../src/components/DifficultySelector';
+import ThemeToggle from '../src/components/ThemeToggle';
+import { useTheme } from '../src/contexts/ThemeContext';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -16,6 +18,8 @@ const Container = styled.div`
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background-color: ${({ theme }) => theme.background};
+  transition: background-color 0.3s ease;
 `;
 
 const Title = styled.h1`
@@ -24,6 +28,8 @@ const Title = styled.h1`
   line-height: 1;
   font-size: 1.8rem;
   text-align: center;
+  color: ${({ theme }) => theme.text};
+  transition: color 0.3s ease;
 `;
 
 const Home: NextPage = () => {
@@ -37,6 +43,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <ThemeToggle />
       <Title>Connect Five</Title>
       
       {!gameMode ? (
