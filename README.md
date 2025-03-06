@@ -13,6 +13,8 @@ A React-based Connect Five game with an infinite canvas. Play against another hu
 - Win detection for five in a row (horizontal, vertical, or diagonal)
 - Visual indicators for current player and last move
 
+![ConnectFive Screenshot](https://github.com/user-attachments/assets/06cf6999-960f-4434-a8f6-016aa36f82ac)
+
 ## Getting Started
 
 ### Prerequisites
